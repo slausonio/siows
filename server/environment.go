@@ -59,6 +59,17 @@ func readDefaultEnvFile() Environment {
 	return defaultEnvFile
 }
 
+func readEnvironmentSpecificEnvFile(env string) Environment {
+	fileName := fmt.Sprintf("env/-%s", env)
+	defaultEnvFile, err := godotenv.Read(fileName)
+	if err != nil {
+		dotEnvErr := fmt.Errorf("dot env err: %w", err)
+		logrus.Info(dotEnvErr)
+	}
+
+	return defaultEnvFile
+}
+
 func readEnv() string {
 	appName, ok := os.LookupEnv(Env)
 	if !ok {
