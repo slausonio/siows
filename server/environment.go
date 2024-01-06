@@ -39,12 +39,13 @@ func NewEnvironment() Environment {
 }
 
 func (e Environment) readEnvironment() Environment {
-	defaultEnvFile := readDefaultEnvFile()
-	mergedEnv := siogo.MergeMaps(defaultEnvFile, e)
+	currentEnv := readCurrentEnv()
+	defaultEnvMap := readDefaultEnvFile()
+	currentEnvMap := readEnvironmentSpecificEnvFile(currentEnv)
 
-	environment := make(Environment)
-	environment["PATH"] = "/bin:/usr/bin"
-	return environment
+	mergedEnv := siogo.MergeMaps(defaultEnvMap, currentEnv)
+
+	return mergedEnv
 }
 
 func readDefaultEnvFile() Environment {
@@ -70,7 +71,7 @@ func readEnvironmentSpecificEnvFile(env string) Environment {
 	return defaultEnvFile
 }
 
-func readEnv() string {
+func readCurrentEnv() string {
 	appName, ok := os.LookupEnv(Env)
 	if !ok {
 		err := fmt.Errorf("new environment: %w", ErrNoEnv)
