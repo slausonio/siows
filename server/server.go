@@ -9,37 +9,24 @@ import (
 	"github.com/slausonio/siows/environment"
 )
 
-type Env interface {
-	Value(key string) string
-	Update(key, value string)
-}
-
-type Logger interface {
-	Log(message string)
-}
-
-type SioGoServer interface {
-	Env() Env
-	Server() *http.Server
-	Kill()
-	Start(handler http.Handler)
-	printInfo(start int64)
-	printSio()
-}
-
+// Server represents a server instance that handles HTTP requests.
 type Server struct {
-	env    Env
+	env    environment.SioWSEnv
 	server *http.Server
 }
 
-func (s *Server) Env() Env {
+// Env returns the env variable of the Server.
+func (s *Server) Env() environment.SioWSEnv {
 	return s.env
 }
 
+// Server is the method of type `Server` that returns the underlying `http.Server` instance.
 func (s *Server) Server() *http.Server {
 	return s.server
 }
 
+// Kill terminates the server by closing the underlying http.Server instance.
+// It panics if an error is encountered while closing the server.
 func (s *Server) Kill() {
 	err := s.server.Close()
 	if err != nil {
@@ -47,14 +34,15 @@ func (s *Server) Kill() {
 	}
 }
 
-func NewServer() *Server {
-
+// NewServer initializes and returns a new instance of the Server struct.
+func NewServer(env environment.SioWSEnv) *Server {
 	return &Server{
-		env:    environment.NewEnvironment(),
+		env:    env,
 		server: &http.Server{},
 	}
 }
 
+// Start starts the server with the provided handler.
 func (s *Server) Start(handler http.Handler) {
 	startTS := time.Now().UnixMicro()
 	serverAddr := fmt.Sprintf(":%s", s.env.Value(environment.PortKey))
@@ -66,13 +54,16 @@ func (s *Server) Start(handler http.Handler) {
 	s.server.IdleTimeout = 120 * time.Second
 	s.server.MaxHeaderBytes = 1 << 20
 
-	go func() {
-		logrus.Fatal(s.server.ListenAndServe())
+	err := s.server.ListenAndServe()
+	if err != nil {
+		panic(err)
+	}
 
-		s.printInfo(startTS)
-	}()
+	s.printInfo(startTS)
 }
 
+// printInfo prints information about the server.
+// calls the [s.printSio] method and logs the server's port number and start time.
 func (s *Server) printInfo(start int64) {
 	s.printSio()
 	// e.printGopher()
@@ -81,6 +72,7 @@ func (s *Server) printInfo(start int64) {
 	logrus.Infof("Server Started in %v", time.Now().UnixMicro()-start)
 }
 
+// printSio prints the Siogo ASCII art to the console.
 func (s *Server) printSio() {
 	siogoASCII := `
 

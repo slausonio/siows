@@ -4,8 +4,7 @@
 // The server can listen for incoming connections on a specified port and route requests
 // to the appropriate handler based on the request path.
 //
-// The server also supports graceful shutdown by catching interrupt signals and waiting
-// for ongoing requests to finish before shutting down.
+// Supports any handler that implements the http.Handler interface.
 //
 // The server package assumes a basic understanding of HTTP servers and handlers in Go.
 package server

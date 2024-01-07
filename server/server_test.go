@@ -2,6 +2,7 @@ package server
 
 import (
 	"fmt"
+	"github.com/stretchr/testify/assert"
 	"net/http"
 	"testing"
 
@@ -42,7 +43,7 @@ func EnvCleanup(t *testing.T) {
 func createTestServerStruct(t *testing.T) (*Server, *mocks.Env) {
 	mockEnv := mocks.NewEnv(t)
 
-	return &Server{env: mockEnv}, mockEnv
+	return &Server{env: mockEnv, server: &http.Server{}}, mockEnv
 
 }
 
@@ -78,6 +79,38 @@ func TestServer_Start(t *testing.T) {
 			go s.Start(h)
 		})
 	}
+}
+func TestServer_Kill(t *testing.T) {
+	t.Run("happy", func(t *testing.T) {
+		testServer, mockEnv := createTestServerStruct(t)
+		mockEnv.On("Value", environment.PortKey).Return("8080")
+
+		h := http.NewServeMux()
+
+		testServer.Start(h)
+		assert.NotPanics(t, testServer.Kill, "expected server kill to not panic")
+	})
+
+	t.Run("panics", func(t *testing.T) {
+		t.Run("not started", func(t *testing.T) {
+			testServer, _ := createTestServerStruct(t)
+
+			testServer.Kill()
+			assert.Panics(t, testServer.Kill, "expected server kill to panic")
+		})
+
+		t.Run("already closed", func(t *testing.T) {
+			testServer, mockEnv := createTestServerStruct(t)
+			mockEnv.On("Value", environment.PortKey).Return("8080")
+
+			h := http.NewServeMux()
+
+			testServer.Start(h)
+			testServer.Kill()
+
+			assert.Panics(t, testServer.Kill, "expected server kill to panic")
+		})
+	})
 }
 
 //func TestServer_printInfo(t *testing.T) {
