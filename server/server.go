@@ -54,10 +54,19 @@ func (s *Server) Start(handler http.Handler) {
 	s.server.IdleTimeout = 120 * time.Second
 	s.server.MaxHeaderBytes = 1 << 20
 
-	err := s.server.ListenAndServe()
-	if err != nil {
-		panic(err)
-	}
+	go func() {
+		err := s.server.ListenAndServe()
+		if err != nil {
+			logrus.Fatal(err)
+		}
+
+		defer func(server *http.Server) {
+			err := server.Close()
+			if err != nil {
+				logrus.Fatal(err)
+			}
+		}(s.server)
+	}()
 
 	s.printInfo(startTS)
 }
@@ -69,7 +78,7 @@ func (s *Server) printInfo(start int64) {
 	// e.printGopher()
 
 	logrus.Infof("Server running on port: %v ", s.env.Value(environment.PortKey))
-	logrus.Infof("Server Started in %v", time.Now().UnixMicro()-start)
+	logrus.Infof("Server Started in %v μs", time.Now().UnixMicro()-start)
 }
 
 // printSio prints the Siogo ASCII art to the console.
