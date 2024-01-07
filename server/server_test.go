@@ -11,8 +11,6 @@ import (
 	"github.com/slausonio/siows/environment"
 )
 
-type handler struct{}
-
 var HappyEnvMap = environment.SioWSEnv{
 	environment.CurrentEnvKey: "test",
 	environment.AppNameKey:    "go-webserver",
