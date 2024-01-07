@@ -2,9 +2,10 @@ package server
 
 import (
 	"fmt"
-	"github.com/stretchr/testify/assert"
 	"net/http"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 
 	"github.com/slausonio/siotest"
 	"github.com/slausonio/siows/environment"
@@ -12,12 +13,12 @@ import (
 
 type handler struct{}
 
-var HappyEnvMap = environment.SioGoEnv{
+var HappyEnvMap = environment.SioWSEnv{
 	environment.CurrentEnvKey: "test",
 	environment.AppNameKey:    "go-webserver",
 	environment.PortKey:       "8080"}
 
-var CurrentEnvMap = environment.SioGoEnv{"test1": "test", "test2": "test2"}
+var CurrentEnvMap = environment.SioWSEnv{"test1": "test", "test2": "test2"}
 
 func EnvSetup(t *testing.T) {
 	t.Helper()
@@ -39,7 +40,7 @@ func EnvCleanup(t *testing.T) {
 	})
 }
 
-func createTestServerStruct(t *testing.T, env environment.SioGoEnv) *Server {
+func createTestServerStruct(t *testing.T, env environment.SioWSEnv) *Server {
 	return &Server{env: env, server: &http.Server{}}
 }
 

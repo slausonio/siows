@@ -11,12 +11,12 @@ import (
 
 // Server represents a server instance that handles HTTP requests.
 type Server struct {
-	env    environment.SioWSEnv
+	env    environment.Env
 	server *http.Server
 }
 
 // Env returns the env variable of the Server.
-func (s *Server) Env() environment.SioWSEnv {
+func (s *Server) Env() environment.Env {
 	return s.env
 }
 
@@ -35,7 +35,7 @@ func (s *Server) Kill() {
 }
 
 // NewServer initializes and returns a new instance of the Server struct.
-func NewServer(env environment.SioWSEnv) *Server {
+func NewServer(env environment.Env) *Server {
 	return &Server{
 		env:    env,
 		server: &http.Server{},

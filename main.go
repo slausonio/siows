@@ -7,14 +7,14 @@ import (
 )
 
 type Server interface {
-	Env() environment.SioWSEnv
+	Env() environment.Env
 	Server() *http.Server
 	Start(handler http.Handler)
 	Kill()
 }
 
 type SioWS struct {
-	env       environment.SioWSEnv
+	env       environment.Env
 	sioServer Server
 }
 

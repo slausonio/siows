@@ -7,7 +7,7 @@ require (
 	github.com/joho/godotenv v1.5.1
 	github.com/sirupsen/logrus v1.9.3
 	github.com/slausonio/siogo v0.0.1
-	github.com/slausonio/siotest v0.0.3-0.20240107192525-50981f3499ca
+	github.com/slausonio/siotest v0.0.3
 	github.com/stretchr/testify v1.8.4
 )
 

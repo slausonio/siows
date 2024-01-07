@@ -25,32 +25,32 @@ var (
 	ErrNoCurrentEnv = errors.New("no CURRENT_ENV env var found")
 )
 
-type SioWSEnv interface {
+type Env interface {
 	Value(key string) string
 	Update(key, value string)
 }
 
-// SioGoEnv is a type that represents a map of string key-value pairs for environment variables.
-type SioGoEnv map[string]string
+// SioWSEnv is a type that represents a map of string key-value pairs for environment variables.
+type SioWSEnv map[string]string
 
-// Value retrieves the value associated with the specified key in the SioGoEnv map.
+// Value retrieves the value associated with the specified key in the SioWSEnv map.
 // If the key does not exist in the map, an empty string is returned.
-func (e SioGoEnv) Value(key string) string {
+func (e SioWSEnv) Value(key string) string {
 	return e[key]
 }
 
-// Update modifies the value associated with the given key in the SioGoEnv map. If the key does not exist, a new key-value pair is added.
-func (e SioGoEnv) Update(key, value string) {
+// Update modifies the value associated with the given key in the SioWSEnv map. If the key does not exist, a new key-value pair is added.
+func (e SioWSEnv) Update(key, value string) {
 	e[key] = value
 }
 
-// NewEnvironment creates a new SioGoEnv environment.
+// NewEnvironment creates a new SioWSEnv environment.
 // It reads the default environment variables from a file,
 // merges them with environment-specific variables,
 // and sets the environment variables to the system.
 // It returns the merged environment.
-func NewEnvironment() SioGoEnv {
-	env := make(SioGoEnv)
+func NewEnvironment() SioWSEnv {
+	env := make(SioWSEnv)
 	env = env.readEnvironment()
 	env.setEnvToSystem()
 
@@ -59,7 +59,7 @@ func NewEnvironment() SioGoEnv {
 
 // readEnvironment reads the environment configuration by merging the default environment file,
 // the current environment file, and setting the environment variables
-func (e SioGoEnv) readEnvironment() SioGoEnv {
+func (e SioWSEnv) readEnvironment() SioWSEnv {
 	defaultEnvMap := readDefaultEnvFile()
 	defaultEnvMap.setEnvToSystem()
 
@@ -71,10 +71,10 @@ func (e SioGoEnv) readEnvironment() SioGoEnv {
 	return mergedEnv
 }
 
-// setEnvToSystem sets the environment variables in the SioGoEnv map to the system.
+// setEnvToSystem sets the environment variables in the SioWSEnv map to the system.
 // It iterates over the key-value pairs in the map and uses os.Setenv to set each variable.
 // If there is an error setting the variable, it panics with the error.
-func (e SioGoEnv) setEnvToSystem() {
+func (e SioWSEnv) setEnvToSystem() {
 	for key, value := range e {
 		err := os.Setenv(key, value)
 		if err != nil {
@@ -83,9 +83,9 @@ func (e SioGoEnv) setEnvToSystem() {
 	}
 }
 
-// readDefaultEnvFile reads the default environment file located at DefaultFilePath and returns its contents as a SioGoEnv map.
+// readDefaultEnvFile reads the default environment file located at DefaultFilePath and returns its contents as a SioWSEnv map.
 // If the file cannot be read or an error occurs, it logs the error and panics with ErrNoEnvFile.
-func readDefaultEnvFile() SioGoEnv {
+func readDefaultEnvFile() SioWSEnv {
 	defaultEnvFile, err := godotenv.Read(DefaultFilePath)
 	if err != nil {
 		dotEnvErr := fmt.Errorf("dot env err: %w", err)
@@ -99,8 +99,8 @@ func readDefaultEnvFile() SioGoEnv {
 
 // readEnvironmentSpecificFile reads the environment-specific file based on the given environment.
 // It takes an `env` string parameter indicating the environment.
-// It returns an instance of the `SioGoEnv` type that represents the environment-specific file.
-func readEnvironmentSpecificFile(env string) SioGoEnv {
+// It returns an instance of the `SioWSEnv` type that represents the environment-specific file.
+func readEnvironmentSpecificFile(env string) SioWSEnv {
 	fileName := fmt.Sprintf(CurrentEnvFilePath, env)
 
 	defaultEnvFile, err := godotenv.Read(fileName)
