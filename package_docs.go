@@ -7,4 +7,4 @@
 // Supports any handler that implements the http.Handler interface.
 //
 // The package assumes a basic understanding of HTTP servers and handlers in Go.
-package server
+package siows

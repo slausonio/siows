@@ -1,28 +1,25 @@
 package siows
 
 import (
-	"github.com/slausonio/siows/environment"
-	"github.com/slausonio/siows/server"
 	"net/http"
 )
 
 type Server interface {
-	Env() environment.Env
+	Env() Env
 	Server() *http.Server
 	Start(handler http.Handler)
-	Kill()
 }
 
 type SioWS struct {
-	env       environment.Env
+	env       Env
 	sioServer Server
 }
 
 func NewSioWS(handler http.Handler) *SioWS {
-	env := environment.NewEnvironment()
+	env := NewEnvironment()
 
 	return &SioWS{
 		env:       env,
-		sioServer: server.NewServer(env),
+		sioServer: NewServer(env),
 	}
 }

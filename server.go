@@ -8,32 +8,32 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-// Server represents a server instance that handles HTTP requests.
-type Server struct {
+// SioWSServer represents a server instance that handles HTTP requests.
+type SioWSServer struct {
 	env    Env
 	server *http.Server
 }
 
-// Env returns the env variable of the Server.
-func (s *Server) Env() Env {
+// Env returns the env variable of the SioWSServer.
+func (s *SioWSServer) Env() Env {
 	return s.env
 }
 
-// Server is the method of type `Server` that returns the underlying `http.Server` instance.
-func (s *Server) Server() *http.Server {
+// SioWSServer is the method of type `SioWSServer` that returns the underlying `http.Server` instance.
+func (s *SioWSServer) Server() *http.Server {
 	return s.server
 }
 
-// NewServer initializes and returns a new instance of the Server struct.
-func NewServer(env Env) *Server {
-	return &Server{
+// NewServer initializes and returns a new instance of the SioWSServer struct.
+func NewServer(env Env) *SioWSServer {
+	return &SioWSServer{
 		env:    env,
 		server: &http.Server{},
 	}
 }
 
 // Start starts the server with the provided handler.
-func (s *Server) Start(handler http.Handler) {
+func (s *SioWSServer) Start(handler http.Handler) {
 	startTS := time.Now().UnixMicro()
 	serverAddr := fmt.Sprintf(":%s", s.env.Value(PortKey))
 
@@ -65,16 +65,16 @@ func (s *Server) Start(handler http.Handler) {
 
 // printInfo prints information about the server.
 // calls the [s.printSio] method and logs the server's port number and start time.
-func (s *Server) printInfo(start int64) {
+func (s *SioWSServer) printInfo(start int64) {
 	s.printSio()
 	// e.printGopher()
 
-	logrus.Infof("Server running on port: %v ", s.env.Value(PortKey))
-	logrus.Infof("Server Started in %v μs", time.Now().UnixMicro()-start)
+	logrus.Infof("SioWSServer running on port: %v ", s.env.Value(PortKey))
+	logrus.Infof("SioWSServer Started in %v μs", time.Now().UnixMicro()-start)
 }
 
 // printSio prints the Siogo ASCII art to the console.
-func (s *Server) printSio() {
+func (s *SioWSServer) printSio() {
 	siogoASCII := `
 	
 

@@ -7,12 +7,6 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-var happyEnvMap = SioWSEnv{
-	CurrentEnvKey: "test",
-	AppNameKey:    "go-webserver",
-	PortKey:       "8080",
-}
-
 func TestServer_Start(t *testing.T) {
 	t.Parallel()
 
