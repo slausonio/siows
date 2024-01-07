@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/sirupsen/logrus"
-	"github.com/slausonio/go-webserver/environment"
+	"github.com/slausonio/siows/environment"
 )
 
 type Env interface {

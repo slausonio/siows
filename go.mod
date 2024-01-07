@@ -1,4 +1,4 @@
-module github.com/slausonio/go-webserver
+module github.com/slausonio/siows
 
 go 1.21.5
 
@@ -14,6 +14,7 @@ require (
 require (
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
+	github.com/slausonio/go-webserver v0.0.1 // indirect
 	github.com/stretchr/objx v0.5.1 // indirect
 	golang.org/x/exp v0.0.0-20240103183307-be819d1f06fc // indirect
 	golang.org/x/sys v0.16.0 // indirect

@@ -2,11 +2,12 @@ package server
 
 import (
 	"fmt"
-	"github.com/slausonio/go-webserver/environment"
-	"github.com/slausonio/go-webserver/server/mocks"
-	"github.com/slausonio/siotest"
 	"net/http"
 	"testing"
+
+	"github.com/slausonio/siotest"
+	"github.com/slausonio/siows/environment"
+	"github.com/slausonio/siows/server/mocks"
 )
 
 type handler struct{}
