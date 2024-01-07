@@ -18,6 +18,10 @@ type Server struct {
 	env Env
 }
 
+func (s *Server) Env() Env {
+	return s.env
+}
+
 func NewServer() *Server {
 	return &Server{
 		env: environment.NewEnvironment(),
@@ -48,7 +52,7 @@ func (s *Server) printInfo(start int64) {
 	s.printSio()
 	// e.printGopher()
 
-	logrus.Infof("Server running on port: %v ", s.e.Value(environment.Port))
+	logrus.Infof("Server running on port: %v ", s.env.Value(environment.Port))
 	logrus.Infof("Server Started in %v", time.Now().UnixMicro()-start)
 }
 
