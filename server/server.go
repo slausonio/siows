@@ -9,19 +9,24 @@ import (
 	"github.com/slausonio/go-webserver/environment"
 )
 
+type Env interface {
+	Value(key string) string
+	Update(key, value string)
+}
+
 type Server struct {
-	Environment environment.Environment
+	env Env
 }
 
 func NewServer() *Server {
 	return &Server{
-		Environment: environment.NewEnvironment(),
+		env: environment.NewEnvironment(),
 	}
 }
 
 func (s *Server) Start(handler http.Handler) {
 	startTS := time.Now().UnixMicro()
-	serverAddr := fmt.Sprintf(":%s", s.Environment.Value(environment.Port))
+	serverAddr := fmt.Sprintf(":%s", s.env.Value(environment.Port))
 
 	server := &http.Server{
 		Addr:           serverAddr,
@@ -43,7 +48,7 @@ func (s *Server) printInfo(start int64) {
 	s.printSio()
 	// e.printGopher()
 
-	logrus.Infof("Server running on port: %v ", s.Environment.Value(environment.Port))
+	logrus.Infof("Server running on port: %v ", s.e.Value(environment.Port))
 	logrus.Infof("Server Started in %v", time.Now().UnixMicro()-start)
 }
 

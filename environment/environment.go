@@ -16,7 +16,7 @@ const (
 	Port       = "PORT"
 
 	DefaultFilePath    = "env/.env"
-	CurrentEnvFilePath = "env/-%s"
+	CurrentEnvFilePath = "env/%s.env"
 )
 
 var (
@@ -25,26 +25,28 @@ var (
 	ErrNoCurrentEnv = errors.New("no CURRENT_ENV env var found")
 )
 
-type Environment map[string]string
+type SioGoEnv map[string]string
 
-func (e Environment) Value(key string) string {
+func (e SioGoEnv) Value(key string) string {
 	return e[key]
 }
 
-func (e Environment) Update(key, value string) {
+func (e SioGoEnv) Update(key, value string) {
 	e[key] = value
 }
 
-func NewEnvironment() Environment {
-	env := make(Environment)
+func NewEnvironment() SioGoEnv {
+	env := make(SioGoEnv)
 	env = env.readEnvironment()
 	env.setEnvToSystem()
 
 	return env
 }
 
-func (e Environment) readEnvironment() Environment {
+func (e SioGoEnv) readEnvironment() SioGoEnv {
 	defaultEnvMap := readDefaultEnvFile()
+	defaultEnvMap.setEnvToSystem()
+
 	currentEnv := readCurrentEnv()
 	currentEnvMap := readEnvironmentSpecificFile(currentEnv)
 
@@ -53,7 +55,7 @@ func (e Environment) readEnvironment() Environment {
 	return mergedEnv
 }
 
-func (e Environment) setEnvToSystem() {
+func (e SioGoEnv) setEnvToSystem() {
 	for key, value := range e {
 		err := os.Setenv(key, value)
 		if err != nil {
@@ -62,7 +64,7 @@ func (e Environment) setEnvToSystem() {
 	}
 }
 
-func readDefaultEnvFile() Environment {
+func readDefaultEnvFile() SioGoEnv {
 	defaultEnvFile, err := godotenv.Read(DefaultFilePath)
 	if err != nil {
 		dotEnvErr := fmt.Errorf("dot env err: %w", err)
@@ -74,7 +76,7 @@ func readDefaultEnvFile() Environment {
 	return defaultEnvFile
 }
 
-func readEnvironmentSpecificFile(env string) Environment {
+func readEnvironmentSpecificFile(env string) SioGoEnv {
 	fileName := fmt.Sprintf(CurrentEnvFilePath, env)
 
 	defaultEnvFile, err := godotenv.Read(fileName)
