@@ -25,11 +25,6 @@ var (
 	ErrNoCurrentEnv = errors.New("no CURRENT_ENV env var found")
 )
 
-type Env interface {
-	Value(key string) string
-	Update(key, value string)
-}
-
 // SioWSEnv is a type that represents a map of string key-value pairs for environment variables.
 type SioWSEnv map[string]string
 

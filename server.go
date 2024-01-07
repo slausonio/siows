@@ -10,12 +10,12 @@ import (
 
 // SioWSServer represents a server instance that handles HTTP requests.
 type SioWSServer struct {
-	env    Env
+	env    SioWSEnv
 	server *http.Server
 }
 
 // Env returns the env variable of the SioWSServer.
-func (s *SioWSServer) Env() Env {
+func (s *SioWSServer) Env() SioWSEnv {
 	return s.env
 }
 
@@ -25,10 +25,10 @@ func (s *SioWSServer) Server() *http.Server {
 }
 
 // NewServer initializes and returns a new instance of the SioWSServer struct.
-func NewServer(env Env) *SioWSServer {
+func NewServer(env SioWSEnv) *SioWSServer {
 	return &SioWSServer{
 		env:    env,
-		server: &http.Server{},
+		server: &http.Server{ReadHeaderTimeout: 5 * time.Second},
 	}
 }
 

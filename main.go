@@ -4,15 +4,20 @@ import (
 	"net/http"
 )
 
-type Server interface {
-	Env() Env
+type Env interface {
+	Value(key string) string
+	Update(key, value string)
+}
+
+type SioServer interface {
+	Env() SioWSEnv
 	Server() *http.Server
 	Start(handler http.Handler)
 }
 
 type SioWS struct {
 	env       Env
-	sioServer Server
+	sioServer SioServer
 }
 
 func NewSioWS(handler http.Handler) *SioWS {
