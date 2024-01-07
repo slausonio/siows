@@ -1,10 +1,10 @@
-// Package server contains the implementation of a server.
+// Package siows
 //
-// It provides functions to start and stop the server, as well as handling requests.
-// The server can listen for incoming connections on a specified port and route requests
-// to the appropriate handler based on the request path.
+// # Bootstraps making a webservice in go
+//
+// Reads env and exposes a map of the values []
 //
 // Supports any handler that implements the http.Handler interface.
 //
-// The server package assumes a basic understanding of HTTP servers and handlers in Go.
+// The package assumes a basic understanding of HTTP servers and handlers in Go.
 package server

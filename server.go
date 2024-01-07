@@ -1,4 +1,4 @@
-package server
+package siows
 
 import (
 	"fmt"
@@ -6,17 +6,16 @@ import (
 	"time"
 
 	"github.com/sirupsen/logrus"
-	"github.com/slausonio/siows/environment"
 )
 
 // Server represents a server instance that handles HTTP requests.
 type Server struct {
-	env    environment.Env
+	env    Env
 	server *http.Server
 }
 
 // Env returns the env variable of the Server.
-func (s *Server) Env() environment.Env {
+func (s *Server) Env() Env {
 	return s.env
 }
 
@@ -26,7 +25,7 @@ func (s *Server) Server() *http.Server {
 }
 
 // NewServer initializes and returns a new instance of the Server struct.
-func NewServer(env environment.Env) *Server {
+func NewServer(env Env) *Server {
 	return &Server{
 		env:    env,
 		server: &http.Server{},
@@ -36,7 +35,7 @@ func NewServer(env environment.Env) *Server {
 // Start starts the server with the provided handler.
 func (s *Server) Start(handler http.Handler) {
 	startTS := time.Now().UnixMicro()
-	serverAddr := fmt.Sprintf(":%s", s.env.Value(environment.PortKey))
+	serverAddr := fmt.Sprintf(":%s", s.env.Value(PortKey))
 
 	s.server.Addr = serverAddr
 	s.server.Handler = handler
@@ -70,7 +69,7 @@ func (s *Server) printInfo(start int64) {
 	s.printSio()
 	// e.printGopher()
 
-	logrus.Infof("Server running on port: %v ", s.env.Value(environment.PortKey))
+	logrus.Infof("Server running on port: %v ", s.env.Value(PortKey))
 	logrus.Infof("Server Started in %v μs", time.Now().UnixMicro()-start)
 }
 

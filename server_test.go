@@ -1,18 +1,16 @@
-package server
+package siows
 
 import (
 	"net/http"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-
-	"github.com/slausonio/siows/environment"
 )
 
-var happyEnvMap = environment.SioWSEnv{
-	environment.CurrentEnvKey: "test",
-	environment.AppNameKey:    "go-webserver",
-	environment.PortKey:       "8080",
+var happyEnvMap = SioWSEnv{
+	CurrentEnvKey: "test",
+	AppNameKey:    "go-webserver",
+	PortKey:       "8080",
 }
 
 func TestServer_Start(t *testing.T) {

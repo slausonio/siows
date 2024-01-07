@@ -3,9 +3,8 @@
 package mocks
 
 import (
+	environment "github.com/slausonio/siows"
 	http "net/http"
-
-	environment "github.com/slausonio/siows/environment"
 
 	mock "github.com/stretchr/testify/mock"
 )

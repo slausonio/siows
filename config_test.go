@@ -1,4 +1,4 @@
-package server
+package siows
 
 import (
 	"fmt"
