@@ -14,17 +14,44 @@ type Env interface {
 	Update(key, value string)
 }
 
+type Logger interface {
+	Log(message string)
+}
+
+type SioGoServer interface {
+	Env() Env
+	Server() *http.Server
+	Kill()
+	Start(handler http.Handler)
+	printInfo(start int64)
+	printSio()
+}
+
 type Server struct {
-	env Env
+	env    Env
+	server *http.Server
 }
 
 func (s *Server) Env() Env {
 	return s.env
 }
 
+func (s *Server) Server() *http.Server {
+	return s.server
+}
+
+func (s *Server) Kill() {
+	err := s.server.Close()
+	if err != nil {
+		panic(err)
+	}
+}
+
 func NewServer() *Server {
+
 	return &Server{
-		env: environment.NewEnvironment(),
+		env:    environment.NewEnvironment(),
+		server: &http.Server{},
 	}
 }
 
@@ -32,17 +59,15 @@ func (s *Server) Start(handler http.Handler) {
 	startTS := time.Now().UnixMicro()
 	serverAddr := fmt.Sprintf(":%s", s.env.Value(environment.Port))
 
-	server := &http.Server{
-		Addr:           serverAddr,
-		Handler:        handler,
-		ReadTimeout:    10 * time.Second,  // Time to read the entire request, including the body
-		WriteTimeout:   10 * time.Second,  // Time to write the response
-		IdleTimeout:    120 * time.Second, // Time a Keep-Alive connection will be kept idle before being reused
-		MaxHeaderBytes: 1 << 20,           // Maximum header size
-	}
+	s.server.Addr = serverAddr
+	s.server.Handler = handler
+	s.server.ReadTimeout = 10 * time.Second
+	s.server.WriteTimeout = 10 * time.Second
+	s.server.IdleTimeout = 120 * time.Second
+	s.server.MaxHeaderBytes = 1 << 20
 
 	go func() {
-		logrus.Fatal(server.ListenAndServe())
+		logrus.Fatal(s.server.ListenAndServe())
 
 		s.printInfo(startTS)
 	}()
