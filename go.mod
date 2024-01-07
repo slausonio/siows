@@ -10,6 +10,7 @@ require (
 )
 
 require (
+	github.com/slausonio/siotest v0.0.1 // indirect
 	golang.org/x/exp v0.0.0-20240103183307-be819d1f06fc // indirect
 	golang.org/x/sys v0.16.0 // indirect
 )

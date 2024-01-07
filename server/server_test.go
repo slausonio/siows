@@ -1,10 +1,9 @@
 package server
 
 import (
-	"github.com/joho/godotenv"
 	"github.com/slausonio/go-webserver/environment"
+	"github.com/slausonio/siotest"
 	"net/http"
-	"os"
 	"testing"
 )
 
@@ -13,30 +12,9 @@ type handler struct{}
 var happyEnv = environment.Environment{environment.AppName: "go-webserver",
 	environment.Port: "8080"}
 
-func setCurrentEnvForTest(t *testing.T) {
-	t.Helper()
-
-	err := os.Setenv(environment.CurrentEnv, "test")
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	t.Cleanup(os.Clearenv)
-}
-
-func writeEnvToFile(t *testing.T, env environment.Environment) {
-	t.Helper()
-
-	err := godotenv.Write(env, "env/.env")
-	if err != nil {
-		t.Fatal(err)
-	}
-}
-
 func TestServer_Start(t *testing.T) {
 	t.Run("Happy", func(t *testing.T) {
-		setCurrentEnvForTest(t)
-		writeEnvToFile(t, happyEnv)
+		siotest.WriteEnvToFile(t, "env/.env", happyEnv)
 		s := &Server{
 			Environment: environment.NewEnvironment(),
 		}

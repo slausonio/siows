@@ -14,6 +14,9 @@ const (
 	AppName    = "APP_NAME"
 	CurrentEnv = "CURRENT_ENV"
 	Port       = "PORT"
+
+	DefaultFilePath    = "env/.env"
+	CurrentEnvFilePath = "env/-%s"
 )
 
 var (
@@ -41,8 +44,8 @@ func NewEnvironment() Environment {
 }
 
 func (e Environment) readEnvironment() Environment {
-	currentEnv := readCurrentEnv()
 	defaultEnvMap := readDefaultEnvFile()
+	currentEnv := readCurrentEnv()
 	currentEnvMap := readEnvironmentSpecificFile(currentEnv)
 
 	mergedEnv := siogo.MergeMaps(defaultEnvMap, currentEnvMap)
@@ -60,7 +63,7 @@ func (e Environment) setEnvToSystem() {
 }
 
 func readDefaultEnvFile() Environment {
-	defaultEnvFile, err := godotenv.Read("env/.env")
+	defaultEnvFile, err := godotenv.Read(DefaultFilePath)
 	if err != nil {
 		dotEnvErr := fmt.Errorf("dot env err: %w", err)
 
@@ -72,7 +75,7 @@ func readDefaultEnvFile() Environment {
 }
 
 func readEnvironmentSpecificFile(env string) Environment {
-	fileName := fmt.Sprintf("env/-%s", env)
+	fileName := fmt.Sprintf(CurrentEnvFilePath, env)
 
 	defaultEnvFile, err := godotenv.Read(fileName)
 	if err != nil {
