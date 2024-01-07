@@ -12,9 +12,9 @@ import (
 type handler struct{}
 
 var HappyEnvMap = environment.SioGoEnv{
-	environment.CurrentEnv: "test",
-	environment.AppName:    "go-webserver",
-	environment.Port:       "8080"}
+	environment.CurrentEnvKey: "test",
+	environment.AppNameKey:    "go-webserver",
+	environment.PortKey:       "8080"}
 
 var CurrentEnvMap = environment.SioGoEnv{"test1": "test", "test2": "test2"}
 
@@ -49,7 +49,7 @@ func TestServer_Start(t *testing.T) {
 	t.Run("Happy", func(t *testing.T) {
 		testServer, _ := createTestServerStruct(t)
 
-		//mockEnv.On("Value", environment.Port).Return("test")
+		//mockEnv.On("Value", environment.PortKey).Return("test")
 
 		h := http.NewServeMux()
 

@@ -11,9 +11,9 @@ import (
 )
 
 const (
-	AppName    = "APP_NAME"
-	CurrentEnv = "CURRENT_ENV"
-	Port       = "PORT"
+	AppNameKey    = "APP_NAME"
+	CurrentEnvKey = "CURRENT_ENV"
+	PortKey       = "PORT"
 
 	DefaultFilePath    = "env/.env"
 	CurrentEnvFilePath = "env/%s.env"
@@ -25,16 +25,25 @@ var (
 	ErrNoCurrentEnv = errors.New("no CURRENT_ENV env var found")
 )
 
+// SioGoEnv is a type that represents a map of string key-value pairs for environment variables.
 type SioGoEnv map[string]string
 
+// Value retrieves the value associated with the specified key in the SioGoEnv map.
+// If the key does not exist in the map, an empty string is returned.
 func (e SioGoEnv) Value(key string) string {
 	return e[key]
 }
 
+// Update modifies the value associated with the given key in the SioGoEnv map. If the key does not exist, a new key-value pair is added.
 func (e SioGoEnv) Update(key, value string) {
 	e[key] = value
 }
 
+// NewEnvironment creates a new SioGoEnv environment.
+// It reads the default environment variables from a file,
+// merges them with environment-specific variables,
+// and sets the environment variables to the system.
+// It returns the merged environment.
 func NewEnvironment() SioGoEnv {
 	env := make(SioGoEnv)
 	env = env.readEnvironment()
@@ -43,6 +52,8 @@ func NewEnvironment() SioGoEnv {
 	return env
 }
 
+// readEnvironment reads the environment configuration by merging the default environment file,
+// the current environment file, and setting the environment variables
 func (e SioGoEnv) readEnvironment() SioGoEnv {
 	defaultEnvMap := readDefaultEnvFile()
 	defaultEnvMap.setEnvToSystem()
@@ -55,6 +66,9 @@ func (e SioGoEnv) readEnvironment() SioGoEnv {
 	return mergedEnv
 }
 
+// setEnvToSystem sets the environment variables in the SioGoEnv map to the system.
+// It iterates over the key-value pairs in the map and uses os.Setenv to set each variable.
+// If there is an error setting the variable, it panics with the error.
 func (e SioGoEnv) setEnvToSystem() {
 	for key, value := range e {
 		err := os.Setenv(key, value)
@@ -64,6 +78,8 @@ func (e SioGoEnv) setEnvToSystem() {
 	}
 }
 
+// readDefaultEnvFile reads the default environment file located at DefaultFilePath and returns its contents as a SioGoEnv map.
+// If the file cannot be read or an error occurs, it logs the error and panics with ErrNoEnvFile.
 func readDefaultEnvFile() SioGoEnv {
 	defaultEnvFile, err := godotenv.Read(DefaultFilePath)
 	if err != nil {
@@ -76,6 +92,9 @@ func readDefaultEnvFile() SioGoEnv {
 	return defaultEnvFile
 }
 
+// readEnvironmentSpecificFile reads the environment-specific file based on the given environment.
+// It takes an `env` string parameter indicating the environment.
+// It returns an instance of the `SioGoEnv` type that represents the environment-specific file.
 func readEnvironmentSpecificFile(env string) SioGoEnv {
 	fileName := fmt.Sprintf(CurrentEnvFilePath, env)
 
@@ -88,8 +107,11 @@ func readEnvironmentSpecificFile(env string) SioGoEnv {
 	return defaultEnvFile
 }
 
+// readCurrentEnv reads the value of the `CURRENT_ENV` environment variable.
+// If the environment variable is not found, it raises an error and panics.
+// It returns the value of the `CURRENT_ENV` environment variable.
 func readCurrentEnv() string {
-	appName, ok := os.LookupEnv(CurrentEnv)
+	appName, ok := os.LookupEnv(CurrentEnvKey)
 	if !ok {
 		err := fmt.Errorf("new environment: %w", ErrNoCurrentEnv)
 
@@ -100,8 +122,12 @@ func readCurrentEnv() string {
 	return appName
 }
 
+// readAppName reads the value of the environment variable specified by AppNameKey,
+// which is the key for the application name.
+// If the environment variable is not found, it logs an error and panics with an error message.
+// It returns the value of the environment variable as a string.
 func readAppName() string {
-	appName, ok := os.LookupEnv(AppName)
+	appName, ok := os.LookupEnv(AppNameKey)
 	if !ok {
 		err := fmt.Errorf("new environment: %w", ErrNoAppName)
 

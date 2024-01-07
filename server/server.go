@@ -57,7 +57,7 @@ func NewServer() *Server {
 
 func (s *Server) Start(handler http.Handler) {
 	startTS := time.Now().UnixMicro()
-	serverAddr := fmt.Sprintf(":%s", s.env.Value(environment.Port))
+	serverAddr := fmt.Sprintf(":%s", s.env.Value(environment.PortKey))
 
 	s.server.Addr = serverAddr
 	s.server.Handler = handler
@@ -77,7 +77,7 @@ func (s *Server) printInfo(start int64) {
 	s.printSio()
 	// e.printGopher()
 
-	logrus.Infof("Server running on port: %v ", s.env.Value(environment.Port))
+	logrus.Infof("Server running on port: %v ", s.env.Value(environment.PortKey))
 	logrus.Infof("Server Started in %v", time.Now().UnixMicro()-start)
 }
 
