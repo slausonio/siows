@@ -25,15 +25,6 @@ func (s *Server) Server() *http.Server {
 	return s.server
 }
 
-// Kill terminates the server by closing the underlying http.Server instance.
-// It panics if an error is encountered while closing the server.
-func (s *Server) Kill() {
-	err := s.server.Close()
-	if err != nil {
-		panic(err)
-	}
-}
-
 // NewServer initializes and returns a new instance of the Server struct.
 func NewServer(env environment.Env) *Server {
 	return &Server{
@@ -57,13 +48,15 @@ func (s *Server) Start(handler http.Handler) {
 	go func() {
 		err := s.server.ListenAndServe()
 		if err != nil {
-			logrus.Fatal(err)
+			logrus.Panic(err)
+			panic(err)
 		}
 
 		defer func(server *http.Server) {
 			err := server.Close()
 			if err != nil {
-				logrus.Fatal(err)
+				logrus.Panic(err)
+				panic(err)
 			}
 		}(s.server)
 	}()

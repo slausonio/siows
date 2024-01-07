@@ -40,35 +40,50 @@ func EnvCleanup(t *testing.T) {
 	})
 }
 
-func createTestServerStruct(t *testing.T, env environment.SioWSEnv) *Server {
-	return &Server{env: env, server: &http.Server{}}
-}
-
 func TestServer_Start(t *testing.T) {
+	t.Parallel()
+
 	t.Run("Happy", func(t *testing.T) {
-		testServer := createTestServerStruct(t, HappyEnvMap)
-
-		//mockEnv.On("Value", environment.PortKey).Return("test")
-
+		testServer := NewServer(HappyEnvMap)
 		h := http.NewServeMux()
 
 		testServer.Start(h)
-
-		//t.Cleanup(testServer.Kill)
 	})
 
 	t.Run("panics", func(t *testing.T) {
 		t.Skip()
 
 		t.Run("duplicate address", func(t *testing.T) {
-			testServer := createTestServerStruct(t, HappyEnvMap)
+			testServer := NewServer(HappyEnvMap)
 
 			h := http.NewServeMux()
 
 			testServer.Start(h)
-			testServer.Start(h)
 
-			assert.Panics(t, testServer.Kill, "expected server kill to panic")
+			assert.Panics(t,
+				func() {
+					testServer.Start(h)
+				}, "expected server kill to panic")
 		})
 	})
+}
+
+func TestServer_getters(t *testing.T) {
+	testServer := NewServer(HappyEnvMap)
+
+	t.Run("server", func(t *testing.T) {
+		h := http.NewServeMux()
+
+		testServer.Start(h)
+		assert.NotNil(t, testServer.Env(), "expected test server env to not be nil")
+
+	})
+
+	t.Run("env", func(t *testing.T) {
+		h := http.NewServeMux()
+
+		testServer.Start(h)
+		assert.NotNil(t, testServer.Env(), "expected test server env to not be nil")
+	})
+
 }
