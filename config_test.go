@@ -12,30 +12,30 @@ func TestConfigMethods(t *testing.T) {
 		inputConfig  Config
 		inputID      string
 		inputName    string
-		inputPort    uint16
+		inputPort    string
 		expectedID   string
 		expectedName string
-		expectedPort uint16
+		expectedPort string
 	}{
 		{
 			name:         "Test 1",
-			inputConfig:  NewConfig(),
+			inputConfig:  NewConfig(map[string]string{}),
 			inputID:      "12345",
 			inputName:    "Test",
-			inputPort:    80,
+			inputPort:    "8080",
 			expectedID:   "12345",
 			expectedName: "Test",
-			expectedPort: 80,
+			expectedPort: "80",
 		},
 		{
 			name:         "Test 2",
-			inputConfig:  NewConfig().WithID(uuid.NewString()),
+			inputConfig:  NewConfig(map[string]string{}).WithID(uuid.NewString()),
 			inputID:      "",
 			inputName:    "Test",
-			inputPort:    80,
+			inputPort:    "80",
 			expectedID:   "",
 			expectedName: "Test",
-			expectedPort: 80,
+			expectedPort: "80",
 		},
 	}
 

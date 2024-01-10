@@ -1,7 +1,10 @@
 package siows
 
 import (
+	"log/slog"
 	"net/http"
+
+	"github.com/slausonio/siocore"
 )
 
 type Env interface {
@@ -10,7 +13,7 @@ type Env interface {
 }
 
 type SioServer interface {
-	Env() SioWSEnv
+	Env() siocore.Env
 	Server() *http.Server
 	Start(handler http.Handler)
 }
@@ -18,13 +21,18 @@ type SioServer interface {
 type SioWS struct {
 	env       Env
 	sioServer SioServer
+	log       *slog.Logger
 }
 
-func NewSioWS(handler http.Handler) *SioWS {
-	env := NewEnvironment()
+func NewSioWS(handler http.Handler, log *slog.Logger) *SioWS {
+
+	appEnv := siocore.NewAppEnv(log)
+	env := appEnv.Env()
+	config := NewConfig(env)
 
 	return &SioWS{
 		env:       env,
-		sioServer: NewServer(env),
+		sioServer: NewServer(config, env),
+		log:       log,
 	}
 }
