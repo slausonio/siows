@@ -60,7 +60,7 @@ func (c Config) WithName(name string) Config {
 // The format of the returned string is "ID: {id}, Name: {name}, Port: {port}".
 // The values of id, name, and port are retrieved from the Config struct.
 func (c Config) FmtString() string {
-	return fmt.Sprintf("ID: %s, Name: %s, Port: %d", c.id, c.name, c.port)
+	return fmt.Sprintf("ID: %s, Name: %s, Port: %s", c.id, c.name, c.port)
 }
 
 // NewConfig creates a new instance of Config with default values.

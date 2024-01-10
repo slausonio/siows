@@ -27,7 +27,8 @@ func (s *Server) Server() *http.Server {
 }
 
 // NewServer initializes and returns a new instance of the SioWSServer struct.
-func NewServer(config Config, env siocore.Env) *Server {
+func NewServer(env siocore.Env) *Server {
+	config := NewConfig(env)
 	return &Server{
 		env:    env,
 		config: config,

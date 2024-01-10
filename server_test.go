@@ -4,13 +4,21 @@ import (
 	"net/http"
 	"testing"
 
+	"github.com/slausonio/siocore"
 	"github.com/stretchr/testify/assert"
 )
+
+var happyEnvMap = siocore.Env{
+	siocore.EnvKeyCurrentEnv: "test",
+	siocore.EnvKeyAppName:    "go-webserver",
+	siocore.EnvKeyPort:       "8080",
+}
 
 func TestServer_Start(t *testing.T) {
 	t.Parallel()
 
 	t.Run("Happy", func(t *testing.T) {
+
 		testServer := NewServer(happyEnvMap)
 		h := http.NewServeMux()
 
@@ -36,6 +44,8 @@ func TestServer_Start(t *testing.T) {
 }
 
 func TestServer_getters(t *testing.T) {
+	t.Parallel()
+
 	testServer := NewServer(happyEnvMap)
 
 	t.Run("server", func(t *testing.T) {

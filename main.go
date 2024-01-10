@@ -28,11 +28,10 @@ func NewSioWS(handler http.Handler, log *slog.Logger) *SioWS {
 
 	appEnv := siocore.NewAppEnv(log)
 	env := appEnv.Env()
-	config := NewConfig(env)
 
 	return &SioWS{
 		env:       env,
-		sioServer: NewServer(config, env),
+		sioServer: NewServer(env),
 		log:       log,
 	}
 }

@@ -25,7 +25,7 @@ func TestConfigMethods(t *testing.T) {
 			inputPort:    "8080",
 			expectedID:   "12345",
 			expectedName: "Test",
-			expectedPort: "80",
+			expectedPort: "8080",
 		},
 		{
 			name:         "Test 2",
@@ -52,7 +52,7 @@ func TestConfigMethods(t *testing.T) {
 			}
 
 			if c.Port() != tt.expectedPort {
-				t.Errorf("Expected Port to be '%d', got '%d'", tt.expectedPort, c.Port())
+				t.Errorf("Expected Port to be '%s', got '%s'", tt.expectedPort, c.Port())
 			}
 
 			expectedFmtString := "ID: " + tt.expectedID + ", Name: " + tt.expectedName + ", Port: " + fmt.Sprint(tt.expectedPort)
