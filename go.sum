@@ -11,12 +11,15 @@ github.com/sirupsen/logrus v1.9.3 h1:dueUQJ1C2q9oE3F7wvmSGAaVtTmUizReu6fjN8uqzbQ
 github.com/sirupsen/logrus v1.9.3/go.mod h1:naHLuLoDiP4jHNo9R0sCBMtWGeIprob74mVsIT4qYEQ=
 github.com/slausonio/go-webserver v0.0.1 h1:a9639XAfdsxG+Wlb4vRWuq50tO53qkuBFabKJKn6OT0=
 github.com/slausonio/go-webserver v0.0.1/go.mod h1:OU7ktP0//HNI2ZmFvRcfvwvWmKbyVgD4t6isG4wcKcE=
+github.com/slausonio/siocore v0.0.5 h1:FYHlzkXUun+xOLEDIsyBWyKOEBXNF2AVeRCfQmGCmac=
+github.com/slausonio/siocore v0.0.5/go.mod h1:Ko3/p7Q+eSX4Y07alGAkCLGuuLG4jIaOJaEsXpUwgBQ=
 github.com/slausonio/siogo v0.0.1 h1:PiOvhiA+u/ioqwOz+/1IiaTp43xYwakT6AXuFFeWxvA=
 github.com/slausonio/siogo v0.0.1/go.mod h1:1XMO9XY3HOpxOhCu8HmpQHwWcqu/FP6oaAtZm/W/aZs=
 github.com/slausonio/siotest v0.0.3-0.20240107192525-50981f3499ca h1:lAto9Uf15I931JM/XPTwlBiex2rhkSXd4scB6IFC5N4=
 github.com/slausonio/siotest v0.0.3-0.20240107192525-50981f3499ca/go.mod h1:zex23HVJSIKWrKpCqpXD2owrjitP39nDNO03SMAQWc0=
 github.com/slausonio/siotest v0.0.3 h1:ayLxuHV2w/0VkGtdDez0arr78om8rLen91qS4geSAsI=
 github.com/slausonio/siotest v0.0.3/go.mod h1:282nvvMOTVjT7mi+wo9Cl90/8NwFqLUYtO+D8LSaUyo=
+github.com/slausonio/siotest v0.0.4/go.mod h1:282nvvMOTVjT7mi+wo9Cl90/8NwFqLUYtO+D8LSaUyo=
 github.com/stretchr/objx v0.1.0/go.mod h1:HFkY916IF+rwdDfMAkV7OtwuqBVzrE8GR6GFx+wExME=
 github.com/stretchr/objx v0.4.0/go.mod h1:YvHI0jy2hoMjB+UWwv71VJQ9isScKT/TqJzVSSt89Yw=
 github.com/stretchr/objx v0.5.0/go.mod h1:Yh+to48EsGEfYuaHDzXPcE3xhTkx73EhmCGUpEOglKo=

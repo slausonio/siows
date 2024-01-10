@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/google/uuid"
+	"github.com/slausonio/siocore"
 )
 
 // Config is a type that represents a configuration object.
@@ -14,11 +15,11 @@ import (
 type Config struct {
 	id   string
 	name string
-	port uint16
+	port string
 }
 
 // Port returns the port number specified in the configuration.
-func (c Config) Port() uint16 {
+func (c Config) Port() string {
 	return c.port
 }
 
@@ -41,7 +42,7 @@ func (c Config) WithID(id string) Config {
 }
 
 // WithPort sets the port value of the Config struct and returns the modified Config.
-func (c Config) WithPort(port uint16) Config {
+func (c Config) WithPort(port string) Config {
 	c.port = port
 
 	return c
@@ -63,9 +64,10 @@ func (c Config) FmtString() string {
 }
 
 // NewConfig creates a new instance of Config with default values.
-func NewConfig() Config {
+func NewConfig(env siocore.Env) Config {
+	uuid := uuid.NewString()
 	return Config{
-		id:   uuid.NewString(),
-		port: 8080,
+		id:   uuid,
+		port: env.Value(siocore.EnvKeyPort),
 	}
 }
