@@ -24,6 +24,18 @@ type SioWS struct {
 	log       *slog.Logger
 }
 
+func (s SioWS) Env() Env {
+	return s.env
+}
+
+func (s SioWS) SioServer() SioServer {
+	return s.sioServer
+}
+
+func (s SioWS) Log() *slog.Logger {
+	return s.log
+}
+
 func NewSioWS(handler http.Handler, log *slog.Logger) *SioWS {
 
 	appEnv := siocore.NewAppEnv(log)
