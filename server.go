@@ -11,9 +11,10 @@ import (
 
 // Server represents a server instance that handles HTTP requests.
 type Server struct {
-	env    siocore.Env
-	config Config
-	server *http.Server
+	env     siocore.Env
+	config  Config
+	server  *http.Server
+	handler http.Handler
 }
 
 // Env returns the env variable of the SioWSServer.
@@ -21,7 +22,7 @@ func (s *Server) Env() siocore.Env {
 	return s.env
 }
 
-// SioWSServer is the method of type `SioWSServer` that returns the underlying `http.Server` instance.
+// Server is the method of type `SioWSServer` that returns the underlying `http.Server` instance.
 func (s *Server) Server() *http.Server {
 	return s.server
 }
@@ -37,12 +38,12 @@ func NewServer(env siocore.Env) *Server {
 }
 
 // Start starts the server with the provided handler.
-func (s *Server) Start(handler http.Handler) {
+func (s *Server) Start() {
 	startTS := time.Now().UnixMicro()
 	serverAddr := fmt.Sprintf(":%s", s.config.port)
 
 	s.server.Addr = serverAddr
-	s.server.Handler = handler
+	s.server.Handler = s.handler
 	s.server.ReadTimeout = 10 * time.Second
 	s.server.WriteTimeout = 10 * time.Second
 	s.server.IdleTimeout = 120 * time.Second
