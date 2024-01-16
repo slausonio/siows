@@ -2,6 +2,7 @@ package siows
 
 import (
 	"fmt"
+	"log/slog"
 	"net/http"
 	"time"
 
@@ -15,6 +16,7 @@ type Server struct {
 	config  Config
 	server  *http.Server
 	handler http.Handler
+	log     *slog.Logger
 }
 
 // Env returns the env variable of the SioWSServer.
@@ -28,26 +30,28 @@ func (s *Server) Server() *http.Server {
 }
 
 // NewServer initializes and returns a new instance of the SioWSServer struct.
-func NewServer(env siocore.Env) *Server {
+func NewServer(env siocore.Env, handler http.Handler, log *slog.Logger) *Server {
 	config := NewConfig(env)
+	serverAddr := fmt.Sprintf(":%s", config.port)
+
 	return &Server{
 		env:    env,
 		config: config,
-		server: &http.Server{ReadHeaderTimeout: 5 * time.Second},
+		log:    log,
+		server: &http.Server{
+			Addr:              serverAddr,
+			Handler:           handler,
+			ReadTimeout:       10 * time.Second,
+			WriteTimeout:      10 * time.Second,
+			IdleTimeout:       120 * time.Second,
+			MaxHeaderBytes:    1 << 20,
+			ReadHeaderTimeout: 5 * time.Second},
 	}
 }
 
 // Start starts the server with the provided handler.
 func (s *Server) Start() {
 	startTS := time.Now().UnixMicro()
-	serverAddr := fmt.Sprintf(":%s", s.config.port)
-
-	s.server.Addr = serverAddr
-	s.server.Handler = s.handler
-	s.server.ReadTimeout = 10 * time.Second
-	s.server.WriteTimeout = 10 * time.Second
-	s.server.IdleTimeout = 120 * time.Second
-	s.server.MaxHeaderBytes = 1 << 20
 
 	go func() {
 		err := s.server.ListenAndServe()
@@ -73,8 +77,8 @@ func (s *Server) Start() {
 func (s *Server) printInfo(start int64) {
 	s.printSio()
 
-	logrus.Infof("SioWSServer running on port: %v ", s.config.Port())
-	logrus.Infof("SioWSServer Started in %v μs", time.Now().UnixMicro()-start)
+	s.log.Info("SioWSServer running on port: %v ", s.config.Port())
+	s.log.Info("SioWSServer Started in %v μs", time.Now().UnixMicro()-start)
 }
 
 // printSio prints the Siogo ASCII art to the console.

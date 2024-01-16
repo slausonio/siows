@@ -43,7 +43,7 @@ func NewSioWS(handler http.Handler, log *slog.Logger) *SioWS {
 
 	return &SioWS{
 		env:       env,
-		sioServer: NewServer(env),
+		sioServer: NewServer(env, handler, log),
 		log:       log,
 	}
 }
