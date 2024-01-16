@@ -15,7 +15,7 @@ type Env interface {
 type SioServer interface {
 	Env() siocore.Env
 	Server() *http.Server
-	Start(handler http.Handler)
+	Start()
 }
 
 type SioWS struct {
