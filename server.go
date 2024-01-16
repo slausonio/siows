@@ -59,13 +59,6 @@ func (s *Server) Start() {
 			panic(err)
 		}
 
-		defer func(server *http.Server) {
-			err := server.Close()
-			if err != nil {
-				s.log.Error("server stop error: ", err)
-				panic(err)
-			}
-		}(s.server)
 	}()
 
 	s.printInfo(startTS)
