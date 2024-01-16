@@ -6,7 +6,6 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/sirupsen/logrus"
 	"github.com/slausonio/siocore"
 )
 
@@ -56,14 +55,14 @@ func (s *Server) Start() {
 	go func() {
 		err := s.server.ListenAndServe()
 		if err != nil {
-			logrus.Panic(err)
+			s.log.Error("server start error: ", err)
 			panic(err)
 		}
 
 		defer func(server *http.Server) {
 			err := server.Close()
 			if err != nil {
-				logrus.Panic(err)
+				s.log.Error("server stop error: ", err)
 				panic(err)
 			}
 		}(s.server)
