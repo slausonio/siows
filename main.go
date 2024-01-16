@@ -38,7 +38,7 @@ func (s SioWS) Log() *slog.Logger {
 
 func NewSioWS(handler http.Handler, log *slog.Logger) *SioWS {
 
-	appEnv := siocore.NewAppEnv(log)
+	appEnv := siocore.NewAppEnv()
 	env := appEnv.Env()
 
 	return &SioWS{

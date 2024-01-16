@@ -13,6 +13,8 @@ github.com/slausonio/go-webserver v0.0.1 h1:a9639XAfdsxG+Wlb4vRWuq50tO53qkuBFabK
 github.com/slausonio/go-webserver v0.0.1/go.mod h1:OU7ktP0//HNI2ZmFvRcfvwvWmKbyVgD4t6isG4wcKcE=
 github.com/slausonio/siocore v0.0.5 h1:FYHlzkXUun+xOLEDIsyBWyKOEBXNF2AVeRCfQmGCmac=
 github.com/slausonio/siocore v0.0.5/go.mod h1:Ko3/p7Q+eSX4Y07alGAkCLGuuLG4jIaOJaEsXpUwgBQ=
+github.com/slausonio/siocore v0.0.6-0.20240114225921-79234fcf59b4 h1:FgTWgwdhZyNwhWBCtrLsGufS6q1QC7/d5TusiwRwoQQ=
+github.com/slausonio/siocore v0.0.6-0.20240114225921-79234fcf59b4/go.mod h1:2N+ytVWqrbF9EhvilCVRdPUlefrFB4GKYXy570XgSPc=
 github.com/slausonio/siogo v0.0.1 h1:PiOvhiA+u/ioqwOz+/1IiaTp43xYwakT6AXuFFeWxvA=
 github.com/slausonio/siogo v0.0.1/go.mod h1:1XMO9XY3HOpxOhCu8HmpQHwWcqu/FP6oaAtZm/W/aZs=
 github.com/slausonio/siotest v0.0.3-0.20240107192525-50981f3499ca h1:lAto9Uf15I931JM/XPTwlBiex2rhkSXd4scB6IFC5N4=
@@ -33,6 +35,8 @@ github.com/stretchr/testify v1.8.4 h1:CcVxjf3Q8PM0mHUKJCdn+eZZtm5yQwehR5yeSVQQcU
 github.com/stretchr/testify v1.8.4/go.mod h1:sz/lmYIOXD/1dqDmKjjqLyZ2RngseejIcXlSw2iwfAo=
 golang.org/x/exp v0.0.0-20240103183307-be819d1f06fc h1:ao2WRsKSzW6KuUY9IWPwWahcHCgR0s52IfwutMfEbdM=
 golang.org/x/exp v0.0.0-20240103183307-be819d1f06fc/go.mod h1:iRJReGqOEeBhDZGkGbynYwcHlctCvnjTYIamk7uXpHI=
+golang.org/x/exp v0.0.0-20240112132812-db7319d0e0e3 h1:hNQpMuAJe5CtcUqCXaWga3FHu+kQvCqcsoVaQgSV60o=
+golang.org/x/exp v0.0.0-20240112132812-db7319d0e0e3/go.mod h1:idGWGoKP1toJGkd5/ig9ZLuPcZBC3ewk7SzmH0uou08=
 golang.org/x/sys v0.0.0-20220715151400-c0bba94af5f8/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
 golang.org/x/sys v0.16.0 h1:xWw16ngr6ZMtmxDyKyIgsE93KNKz5HKmMa3b8ALHidU=
 golang.org/x/sys v0.16.0/go.mod h1:/VUhepiaJMQUp4+oa/7Zr1D23ma6VTLIYjOOTFZPUcA=
