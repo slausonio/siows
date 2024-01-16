@@ -51,17 +51,20 @@ func NewServer(env siocore.Env, handler http.Handler, log *slog.Logger) *Server 
 // Start starts the server with the provided handler.
 func (s *Server) Start() {
 	startTS := time.Now().UnixMicro()
+	done := make(chan bool)
 
-	//go func() {
-	err := s.server.ListenAndServe()
-	if err != nil {
-		s.log.Error("server start error: ", err)
-		panic(err)
-	}
-
-	//}()
+	go func() {
+		err := s.server.ListenAndServe()
+		if err != nil {
+			s.log.Error("server start error: ", err)
+			panic(err)
+		}
+		done <- true // Signal that server has stopped
+	}()
 
 	s.printInfo(startTS)
+
+	<-done
 }
 
 // printInfo prints information about the server.
