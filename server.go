@@ -54,6 +54,7 @@ func (s *Server) Start() {
 	done := make(chan bool)
 
 	go func() {
+		s.printSio()
 		err := s.server.ListenAndServe()
 		if err != nil {
 			s.log.Error("server start error: ", err)
@@ -70,7 +71,6 @@ func (s *Server) Start() {
 // printInfo prints information about the server.
 // calls the [s.printSio] method and logs the server's port number and start time.
 func (s *Server) printInfo(start int64) {
-	s.printSio()
 
 	s.log.Info("SioWSServer running on port: %v ", s.config.Port())
 	s.log.Info("SioWSServer Started in %v μs", time.Now().UnixMicro()-start)
