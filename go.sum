@@ -19,6 +19,8 @@ github.com/slausonio/siocore v0.0.6-0.20240116003557-3b651f4971b3 h1:YN7b4Ea0KWk
 github.com/slausonio/siocore v0.0.6-0.20240116003557-3b651f4971b3/go.mod h1:2N+ytVWqrbF9EhvilCVRdPUlefrFB4GKYXy570XgSPc=
 github.com/slausonio/siocore v0.0.6-0.20240116003840-806c23a5e945 h1:qcoCPTYZ/fLJLZ17Zdj+9t+HY6D3Tbfh/WtQL+8CBzA=
 github.com/slausonio/siocore v0.0.6-0.20240116003840-806c23a5e945/go.mod h1:2N+ytVWqrbF9EhvilCVRdPUlefrFB4GKYXy570XgSPc=
+github.com/slausonio/siocore v0.0.6-0.20240116004534-158d2e104b15 h1:Ea0S2gOVYifykHht7ErSQ01P3Pzfr51l8IeT3BLWOlc=
+github.com/slausonio/siocore v0.0.6-0.20240116004534-158d2e104b15/go.mod h1:2N+ytVWqrbF9EhvilCVRdPUlefrFB4GKYXy570XgSPc=
 github.com/slausonio/siogo v0.0.1 h1:PiOvhiA+u/ioqwOz+/1IiaTp43xYwakT6AXuFFeWxvA=
 github.com/slausonio/siogo v0.0.1/go.mod h1:1XMO9XY3HOpxOhCu8HmpQHwWcqu/FP6oaAtZm/W/aZs=
 github.com/slausonio/siotest v0.0.3-0.20240107192525-50981f3499ca h1:lAto9Uf15I931JM/XPTwlBiex2rhkSXd4scB6IFC5N4=

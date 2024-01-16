@@ -6,7 +6,7 @@ require (
 	github.com/google/uuid v1.5.0
 	github.com/joho/godotenv v1.5.1
 	github.com/sirupsen/logrus v1.9.3
-	github.com/slausonio/siocore v0.0.6-0.20240116003840-806c23a5e945
+	github.com/slausonio/siocore v0.0.6-0.20240116004534-158d2e104b15
 	github.com/slausonio/siogo v0.0.1
 	github.com/slausonio/siotest v0.0.4
 	github.com/stretchr/testify v1.8.4
