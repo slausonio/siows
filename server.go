@@ -52,14 +52,14 @@ func NewServer(env siocore.Env, handler http.Handler, log *slog.Logger) *Server 
 func (s *Server) Start() {
 	startTS := time.Now().UnixMicro()
 
-	go func() {
-		err := s.server.ListenAndServe()
-		if err != nil {
-			s.log.Error("server start error: ", err)
-			panic(err)
-		}
+	//go func() {
+	err := s.server.ListenAndServe()
+	if err != nil {
+		s.log.Error("server start error: ", err)
+		panic(err)
+	}
 
-	}()
+	//}()
 
 	s.printInfo(startTS)
 }
