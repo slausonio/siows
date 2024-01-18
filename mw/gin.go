@@ -9,15 +9,24 @@ import (
 
 	"github.com/redis/go-redis/v9"
 	"github.com/slausonio/sioauth/authz"
+	"github.com/slausonio/siocore"
 	"github.com/slausonio/siocore/metrics"
 
-	"gitea.slauson.io/slausonio/go-types/generic"
-	siogo "gitea.slauson.io/slausonio/siogo"
 	"github.com/gin-gonic/gin"
 	"github.com/prometheus/client_golang/prometheus"
 )
 
-var unauthorizedErr = siogo.NewUnauthorizedError("unauthorized")
+const (
+	SlogKeyStatusCode = "statusCode"
+)
+
+var unauthorizedErr = siocore.NewUnauthorizedError("unauthorized")
+
+type ErrorResponse struct {
+	Method string `json:"method"`
+	Path   string `json:"path"`
+	Error  string `json:"error"`
+}
 
 type OauthAuthz interface {
 	Get() (*authz.TokenResp, error)
@@ -28,9 +37,9 @@ type MW struct {
 	oauth OauthAuthz
 }
 
-func NewMW(redis *redis.Client, appEnv map[string]string) *MW {
+func NewMW(redis *redis.Client, appEnv siocore.Env) *MW {
 	return &MW{
-		oauth: siogo.NewOauthService(redis, appEnv),
+		oauth: authz.NewAuthz(redis, appEnv),
 	}
 }
 
@@ -41,20 +50,19 @@ func (mw *MW) ErrorHandler(c *gin.Context) {
 		if err != nil {
 
 			var code int
-			eResponse := &generic.ErrorResponse{
+			eResponse := &ErrorResponse{
 				Method: c.Request.Method,
 				Path:   c.Request.URL.Path,
 				Error:  err.Error(),
 			}
 
-			var t *siogo.AppError
+			var t *siocore.AppError
 			switch {
 			default:
 				code = http.StatusInternalServerError
-				logUnknownError(t, code)
+				slog.Error(t.Error(), slog.Int(SlogKeyStatusCode, code))
 			case errors.As(err.Err, &t):
-				code = t.Code
-				logAppError(t)
+				slog.Error(t.Error(), slog.Int(SlogKeyStatusCode, t.Code))
 			}
 
 			c.JSON(code, eResponse)
@@ -110,22 +118,10 @@ func (mw *MW) PrometheusMiddleware() gin.HandlerFunc {
 func (mw *MW) handleHeader(tokenHeader string, c *gin.Context) {
 	tokenHeader = strings.Split(tokenHeader, " ")[1]
 	if ir, intoErr := mw.oauth.Introspect(tokenHeader); intoErr != nil {
-		_ = c.AbortWithError(401, siogo.NewInternalServerError(intoErr.Error()))
+		_ = c.AbortWithError(401, siocore.NewInternalServerError(intoErr.Error()))
 	} else if !ir.Active {
 		_ = c.AbortWithError(401, unauthorizedErr)
 	}
 
 	c.Next()
-}
-
-// Used to push formatted error messages to the logrus
-func logUnknownError(err error, code int) {
-	stackTrace := siogo.GetRuntimeStack()
-	slog.Error(err, stackTrace, code)
-}
-
-// Used to push formatted error messages to the logrus if AppError
-func logAppError(err *siogo.AppError) {
-	stackTrace := siogo.GetRuntimeStack()
-	slog.Error(err, stackTrace, err.Code)
 }
