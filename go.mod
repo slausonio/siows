@@ -6,7 +6,7 @@ require (
 	github.com/google/uuid v1.5.0
 	github.com/joho/godotenv v1.5.1
 	github.com/sirupsen/logrus v1.9.3
-	github.com/slausonio/siocore v0.0.6
+	github.com/slausonio/siocore v0.0.7-0.20240118041550-f0cf0c887e00
 	github.com/slausonio/siogo v0.0.1
 	github.com/slausonio/siotest v0.0.4
 	github.com/stretchr/testify v1.8.4
@@ -43,7 +43,7 @@ require (
 	github.com/gin-gonic/gin v1.9.1
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/slausonio/go-webserver v0.0.1 // indirect
-	github.com/slausonio/sioauth v0.0.0-20240117010725-b884f9e4145c // indirect
+	github.com/slausonio/sioauth v0.0.0-20240118041642-89ca0c75bbbe // indirect
 	github.com/stretchr/objx v0.5.1 // indirect
 	golang.org/x/exp v0.0.0-20240112132812-db7319d0e0e3 // indirect
 	golang.org/x/sys v0.16.0 // indirect

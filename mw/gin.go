@@ -2,15 +2,16 @@ package mw
 
 import (
 	"errors"
+	"log/slog"
 	"net/http"
 	"strconv"
 	"strings"
 
 	"github.com/redis/go-redis/v9"
+	"github.com/slausonio/sioauth/authz"
+	"github.com/slausonio/siocore/metrics"
 
-	"gitea.slauson.io/slausonio/go-prom/sioprom"
 	"gitea.slauson.io/slausonio/go-types/generic"
-	"gitea.slauson.io/slausonio/siodk-log/loki"
 	siogo "gitea.slauson.io/slausonio/siogo"
 	"github.com/gin-gonic/gin"
 	"github.com/prometheus/client_golang/prometheus"
@@ -18,8 +19,13 @@ import (
 
 var unauthorizedErr = siogo.NewUnauthorizedError("unauthorized")
 
+type OauthAuthz interface {
+	Get() (*authz.TokenResp, error)
+	Introspect(token string) (*authz.IntrospectResp, error)
+}
+
 type MW struct {
-	oauth siogo.OauthService
+	oauth OauthAuthz
 }
 
 func NewMW(redis *redis.Client, appEnv map[string]string) *MW {
@@ -81,16 +87,16 @@ func (mw *MW) PrometheusMiddleware() gin.HandlerFunc {
 			method := c.Request.Method
 			path := c.FullPath()
 			status := c.Writer.Status()
-			sioprom.HttpRequestsTotal.With(prometheus.Labels{"method": method, "path": path, "status_code": strconv.Itoa(status)}).
+			metrics.HttpRequestsTotal.With(prometheus.Labels{"method": method, "path": path, "status_code": strconv.Itoa(status)}).
 				Inc()
 
 			// Record request duration
-			sioprom.HttpRequestDuration.With(prometheus.Labels{"method": method, "path": path, "status_code": strconv.Itoa(status)}).
+			metrics.HttpRequestDuration.With(prometheus.Labels{"method": method, "path": path, "status_code": strconv.Itoa(status)}).
 				Observe(duration)
 
 			// Record request failures (e.g., status code >= 500)
 			if status >= 500 {
-				sioprom.HttpRequestFailures.With(prometheus.Labels{"method": method, "path": path, "status_code": strconv.Itoa(status)}).
+				metrics.HttpRequestFailures.With(prometheus.Labels{"method": method, "path": path, "status_code": strconv.Itoa(status)}).
 					Inc()
 			}
 		}))
@@ -115,11 +121,11 @@ func (mw *MW) handleHeader(tokenHeader string, c *gin.Context) {
 // Used to push formatted error messages to the logrus
 func logUnknownError(err error, code int) {
 	stackTrace := siogo.GetRuntimeStack()
-	loki.Error(err, stackTrace, code)
+	slog.Error(err, stackTrace, code)
 }
 
 // Used to push formatted error messages to the logrus if AppError
 func logAppError(err *siogo.AppError) {
 	stackTrace := siogo.GetRuntimeStack()
-	loki.Error(err, stackTrace, err.Code)
+	slog.Error(err, stackTrace, err.Code)
 }
