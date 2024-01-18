@@ -90,7 +90,6 @@ func (mw *MW) AuthMiddleware(c *gin.Context) {
 
 func (mw *MW) PrometheusMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		// Start timer to track request duration
 		timer := prometheus.NewTimer(prometheus.ObserverFunc(func(duration float64) {
 			method := c.Request.Method
 			path := c.FullPath()
@@ -98,11 +97,9 @@ func (mw *MW) PrometheusMiddleware() gin.HandlerFunc {
 			metrics.HttpRequestsTotal.With(prometheus.Labels{"method": method, "path": path, "status_code": strconv.Itoa(status)}).
 				Inc()
 
-			// Record request duration
 			metrics.HttpRequestDuration.With(prometheus.Labels{"method": method, "path": path, "status_code": strconv.Itoa(status)}).
 				Observe(duration)
 
-			// Record request failures (e.g., status code >= 500)
 			if status >= 500 {
 				metrics.HttpRequestFailures.With(prometheus.Labels{"method": method, "path": path, "status_code": strconv.Itoa(status)}).
 					Inc()
@@ -110,7 +107,6 @@ func (mw *MW) PrometheusMiddleware() gin.HandlerFunc {
 		}))
 		defer timer.ObserveDuration()
 
-		// Continue with the next handler in the chain
 		c.Next()
 	}
 }
