@@ -28,7 +28,7 @@ func (s *Server) Server() *http.Server {
 }
 
 // NewServer initializes and returns a new instance of the SioWSServer struct.
-func NewServer(env siocore.Env, handler http.Handler, log *slog.Logger) *Server {
+func NewServer(env siocore.Env, handler http.Handler) *Server {
 	config := NewConfig(env)
 	serverAddr := fmt.Sprintf(":%s", config.port)
 
@@ -55,7 +55,7 @@ func (s *Server) Start() {
 		s.printSio()
 		err := s.server.ListenAndServe()
 		if err != nil {
-			s.log.Error("server start error: ", err)
+			slog.Error("server start error: ", err)
 			panic(err)
 		}
 		done <- true // Signal that server has stopped
@@ -70,8 +70,8 @@ func (s *Server) Start() {
 // calls the [s.printSio] method and logs the server's port number and start time.
 func (s *Server) printInfo(start int64) {
 
-	s.log.Info(fmt.Sprintf("SioWSServer running on port: %v ", s.config.Port()))
-	s.log.Info(fmt.Sprintf("SioWSServer Started in %v μs", time.Now().UnixMicro()-start))
+	slog.Info(fmt.Sprintf("SioWSServer running on port: %v ", s.config.Port()))
+	slog.Info(fmt.Sprintf("SioWSServer Started in %v μs", time.Now().UnixMicro()-start))
 }
 
 // printSio prints the Siogo ASCII art to the console.
