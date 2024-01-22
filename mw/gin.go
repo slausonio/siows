@@ -43,81 +43,98 @@ func NewMW(redis *redis.Client, appEnv siocore.Env) *MW {
 	}
 }
 
-func (mw *MW) ErrorHandler(c *gin.Context) {
-	c.Next()
+func (mw *MW) ErrorHandler(ctx *gin.Context) {
+	ctx.Next()
 
-	for _, err := range c.Errors {
+	for _, err := range ctx.Errors {
 		if err != nil {
-
 			var code int
 			eResponse := &ErrorResponse{
-				Method: c.Request.Method,
-				Path:   c.Request.URL.Path,
+				Method: ctx.Request.Method,
+				Path:   ctx.Request.URL.Path,
 				Error:  err.Error(),
 			}
 
-			var t *siocore.AppError
+			var appErr *siocore.AppError
+
 			switch {
 			default:
 				code = http.StatusInternalServerError
-				slog.Error(t.Error(), slog.Int(SlogKeyStatusCode, code))
-			case errors.As(err.Err, &t):
-				slog.Error(t.Error(), slog.Int(SlogKeyStatusCode, t.Code))
+				slog.Error(appErr.Error(), slog.Int(SlogKeyStatusCode, code))
+			case errors.As(err.Err, &appErr):
+				slog.Error(appErr.Error(), slog.Int(SlogKeyStatusCode, appErr.Code))
 			}
 
-			c.JSON(code, eResponse)
+			ctx.JSON(code, eResponse)
 		}
 	}
 }
 
-func (mw *MW) AuthMiddleware(c *gin.Context) {
-	tokenHeader := c.Request.Header.Get("Authorization")
+func (mw *MW) AuthMiddleware(ctx *gin.Context) {
+	tokenHeader := ctx.Request.Header.Get("Authorization")
 
 	if tokenHeader != "" {
 		headerArray := strings.Split(tokenHeader, " ")
 		if len(headerArray) == 2 {
-			mw.handleHeader(tokenHeader, c)
+			mw.handleHeader(tokenHeader, ctx)
 		} else {
-			_ = c.AbortWithError(401, unauthorizedErr)
+			_ = ctx.AbortWithError(401, unauthorizedErr)
 		}
-
 	} else {
-		_ = c.AbortWithError(401, unauthorizedErr)
+		_ = ctx.AbortWithError(401, unauthorizedErr)
 	}
 
-	c.Next()
+	ctx.Next()
 }
 
 func (mw *MW) PrometheusMiddleware() gin.HandlerFunc {
-	return func(c *gin.Context) {
+	return func(ctx *gin.Context) {
 		timer := prometheus.NewTimer(prometheus.ObserverFunc(func(duration float64) {
-			method := c.Request.Method
-			path := c.FullPath()
-			status := c.Writer.Status()
-			metrics.HttpRequestsTotal.With(prometheus.Labels{"method": method, "path": path, "status_code": strconv.Itoa(status)}).
+			method := ctx.Request.Method
+			path := ctx.FullPath()
+			status := ctx.Writer.Status()
+			metrics.HttpRequestsTotal.With(
+				prometheus.Labels{
+					"method":      method,
+					"path":        path,
+					"status_code": strconv.Itoa(status),
+				},
+			).
 				Inc()
 
-			metrics.HttpRequestDuration.With(prometheus.Labels{"method": method, "path": path, "status_code": strconv.Itoa(status)}).
+			metrics.HttpRequestDuration.With(
+				prometheus.Labels{
+					"method":      method,
+					"path":        path,
+					"status_code": strconv.Itoa(status),
+				},
+			).
 				Observe(duration)
 
 			if status >= 500 {
-				metrics.HttpRequestFailures.With(prometheus.Labels{"method": method, "path": path, "status_code": strconv.Itoa(status)}).
+				metrics.HttpRequestFailures.With(
+					prometheus.Labels{
+						"method":      method,
+						"path":        path,
+						"status_code": strconv.Itoa(status),
+					},
+				).
 					Inc()
 			}
 		}))
 		defer timer.ObserveDuration()
 
-		c.Next()
+		ctx.Next()
 	}
 }
 
-func (mw *MW) handleHeader(tokenHeader string, c *gin.Context) {
+func (mw *MW) handleHeader(tokenHeader string, ctx *gin.Context) {
 	tokenHeader = strings.Split(tokenHeader, " ")[1]
 	if ir, intoErr := mw.oauth.Introspect(tokenHeader); intoErr != nil {
-		_ = c.AbortWithError(401, siocore.NewInternalServerError(intoErr.Error()))
+		_ = ctx.AbortWithError(401, siocore.NewInternalServerError(intoErr.Error()))
 	} else if !ir.Active {
-		_ = c.AbortWithError(401, unauthorizedErr)
+		_ = ctx.AbortWithError(401, unauthorizedErr)
 	}
 
-	c.Next()
+	ctx.Next()
 }
