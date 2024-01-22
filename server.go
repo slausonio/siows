@@ -11,10 +11,9 @@ import (
 
 // Server represents a server instance that handles HTTP requests.
 type Server struct {
-	env     siocore.Env
-	config  Config
-	server  *http.Server
-	handler http.Handler
+	env    siocore.Env
+	server *http.Server
+	config Config
 }
 
 // Env returns the env variable of the SioWSServer.
@@ -53,6 +52,7 @@ func (s *Server) Start() {
 
 	go func() {
 		s.printSio()
+
 		err := s.server.ListenAndServe()
 		if err != nil {
 			slog.Error("server start error: ", err)

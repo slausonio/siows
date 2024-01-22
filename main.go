@@ -18,20 +18,19 @@ type SioServer interface {
 }
 
 type SioWS struct {
-	env       Env
-	sioServer SioServer
+	env       siocore.Env
+	sioServer *Server
 }
 
-func (s SioWS) Env() Env {
+func (s SioWS) Env() siocore.Env {
 	return s.env
 }
 
-func (s SioWS) SioServer() SioServer {
+func (s SioWS) SioServer() *Server {
 	return s.sioServer
 }
 
 func NewSioWS(handler http.Handler) *SioWS {
-
 	appEnv := siocore.NewAppEnv()
 	env := appEnv.Env()
 
